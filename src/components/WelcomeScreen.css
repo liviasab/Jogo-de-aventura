@@ -1,0 +1,46 @@
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px); /* Move para cima */
+  }
+  100% {
+    transform: translateY(0); /* Retorna à posição original */
+  }
+}
+
+.welcome-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('/src/assets/background.png') no-repeat center center/contain; /* Imagem de fundo */
+  background-color: #00B7EF; /* Azul céu claro */
+  color: #00b7ef;
+  animation: float 3s ease-in-out infinite; /* Animação de flutuação */
+}
+
+
+
+.welcome-title {
+  font-family: 'Press Start 2P', sans-serif; /* Substitua por uma fonte específica de aventura */
+  font-size: 2.5rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 250px; /* Aumente este valor para descer mais o título */
+}
+
+.play-image {
+  width: 150px; /* Ajuste o tamanho conforme necessário */
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-top: 50px; /* Aumente este valor para descer mais o botão */
+}
+
+.play-image:hover {
+  transform: scale(1.8); /* Efeito de zoom ao passar o mouse */
+}
