@@ -50,11 +50,15 @@ input {
 
 button {
   padding: 10px 20px;
-  font-size: 30px;
+  font-size: 25px;
   cursor: pointer;
   border: none;
   border-radius: 5px;
   background-color: #fff; /* Cor do botão */
   color: #00B7EF; /* Cor do texto */
   font-family: 'Press Start 2P', sans-serif;
+  
+}
+button:hover {
+  transform: scale(1.2); /* Aumenta a imagem em 50% quando o mouse passa por cima */
 }
