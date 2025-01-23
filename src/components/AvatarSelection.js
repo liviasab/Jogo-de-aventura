@@ -19,7 +19,7 @@ const AvatarSelection = ({ onAvatarSelect }) => {
 
     return (
         <div className="avatar-selection">
-            <h1>Escolha sua Milta</h1>
+            <h1>Select your Milta</h1>
             <div className="avatar-options">
                 <div className="avatar" onClick={() => handleSelect('milta-todes')}>
                     <img 
@@ -27,7 +27,7 @@ const AvatarSelection = ({ onAvatarSelect }) => {
                         alt="Milta para todes" 
                         className={selectedAvatar === 'milta-todes' ? 'selected' : ''} 
                     />
-                    <h2>Milta para todes</h2>
+                    <h2>Milta for everyone</h2>
                 </div>
                 <div className="avatar" onClick={() => handleSelect('milta-meninos')}>
                     <img 
@@ -35,16 +35,16 @@ const AvatarSelection = ({ onAvatarSelect }) => {
                         alt="Milta para meninos" 
                         className={selectedAvatar === 'milta-meninos' ? 'selected' : ''} 
                     />
-                    <h2>Milta para meninos</h2>
+                    <h2>Milta for boys</h2>
                 </div>
             </div>
             <input
                 type="text"
-                placeholder="Quem vai guiar Milta?"
+                placeholder="Who will guide Milta?"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
             />
-            <button onClick={handleStartGame}>Jogar</button>
+            <button onClick={handleStartGame}>Enter</button>
         </div>
     );
 };

@@ -5,7 +5,7 @@ import './WelcomeScreen.css';
 const WelcomeScreen = ({ onPlay }) => { // Alterar 'onStartGame' para 'onPlay'
   return (
     <div className="welcome-screen">
-      <h1 className="welcome-title">Bem-vindos ao Jogo de Aventura!</h1>
+      <h1 className="welcome-title">Welcome to the Adventure Game!</h1>
       <img 
         src="/play-button.png" 
         alt="Botão Play" 
