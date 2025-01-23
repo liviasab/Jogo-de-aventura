@@ -30,10 +30,10 @@
 }
 
 .avatar img:hover {
-  transform: scale(1.7); /* Aumenta a imagem em 50% quando o mouse passa por cima */
+  transform: scale(1.6); /* Aumenta a imagem em 50% quando o mouse passa por cima */
 }
 .avatar img.selected {
-  transform: scale(1.7); /* Aumenta a imagem para dar o efeito de zoom */
+  transform: scale(1.6); /* Aumenta a imagem para dar o efeito de zoom */
   z-index: 1; /* Garante que a imagem selecionada fique acima das outras */
 }
 input {
