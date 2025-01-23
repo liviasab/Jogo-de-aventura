@@ -1,7 +1,8 @@
+// WelcomeScreen.js
 import React from 'react';
-import './WelcomeScreen.css'; // Arquivo CSS para estilos
+import './WelcomeScreen.css';
 
-const WelcomeScreen = ({ onStartGame }) => {
+const WelcomeScreen = ({ onPlay }) => { // Alterar 'onStartGame' para 'onPlay'
   return (
     <div className="welcome-screen">
       <h1 className="welcome-title">Bem-vindos ao Jogo de Aventura!</h1>
@@ -9,10 +10,10 @@ const WelcomeScreen = ({ onStartGame }) => {
         src="/play-button.png" 
         alt="Botão Play" 
         className="play-image" 
-        onClick={onStartGame} 
+        onClick={onPlay} // Manter a referência correta
       />
     </div>
   );
 };
 
-export default WelcomeScreen;
+export default WelcomeScreen;  

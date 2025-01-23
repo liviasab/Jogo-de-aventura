@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import WelcomeScreen from './components/WelcomeScreen';
+import AvatarSelection from './components/AvatarSelection';
+import './App.css';
 
-const App = () => {
-  const [isGameStarted, setIsGameStarted] = useState(false);
+function App() {
+    const [screen, setScreen] = useState('welcome');
+    const [playerData, setPlayerData] = useState({});
 
-  const startGame = () => {
-    setIsGameStarted(true); // Muda para a próxima tela
-  };
+    const handleStartGame = (data) => {
+        setPlayerData(data); // Salvar dados do jogador
+        setScreen('game'); // Mudar para a tela do jogo
+    };
 
-  return (
-    <div>
-      {!isGameStarted ? (
-        <WelcomeScreen onStartGame={startGame} />
-      ) : (
-        <div>Bem-vindo à próxima tela (substitua isso pela sua próxima etapa)</div>
-      )}
-    </div>
-  );
-};
+    return (
+        <div className="App">
+            {screen === 'welcome' && <WelcomeScreen onPlay={() => setScreen('avatarSelection')} />}
+            {screen === 'avatarSelection' && <AvatarSelection onAvatarSelect={handleStartGame} />}
+            {screen === 'game' && <div>Início do Jogo com {playerData.nickname} e avatar {playerData.avatar}</div>}
+        </div>
+    );
+}
 
 export default App;
