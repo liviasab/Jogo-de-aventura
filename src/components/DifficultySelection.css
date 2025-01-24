@@ -1,0 +1,47 @@
+@keyframes moveBackground {
+  0% {
+    background-position: 0 0; /* Posição inicial */
+  }
+  100% {
+    background-position: 100% 0; /* Move a imagem para a direita */
+  }
+}
+
+.difficulty-selection {
+  display: flex;
+  justify-content: center;/* Centraliza os itens */
+  flex-direction: column; 
+  align-items: center; /* Alinha verticalmente no centro */
+  height: 100vh;
+  background: url('../assets/Nuvem.png') no-repeat center center; /* Imagem de fundo */
+  background-color: #00B7EF; /* Azul céu claro */
+  animation: moveBackground 10s linear infinite; /* Animação da imagem de fundo */
+  color: white;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+  font-family: 'Press Start 2P', sans-serif;
+}
+
+.difficulty-options {
+  display: flex;
+  flex-direction: column; /* Alinha os botões verticalmente */
+  gap: 10px; /* Espaçamento entre os botões */
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: white; /* Cor do botão */
+  color: #00B7EF; /* Cor do texto do botão */
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #00A0D1; /* Cor do botão ao passar o mouse */
+}
