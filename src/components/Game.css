@@ -1,0 +1,53 @@
+/* src/components/Game.css */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* Ajusta para manter a Milta acima dos blocos */
+  height: 100vh;
+  background-color: #00B7EF; /* Cor de fundo do jogo */
+  position: relative;
+}
+
+.status {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 18px;
+  z-index: 10; /* Mantém a barra de status acima de outros elementos */
+}
+
+.blocks-container {
+  position: absolute;
+  bottom: 0; /* Coloca os blocos na parte inferior */
+  width: 100%; /* Faz os blocos ocuparem toda a largura da tela */
+  height: 90px; /* Altura dos blocos */
+  display: flex; /* Organiza os blocos horizontalmente */
+  align-items: flex-end; /* Alinha os blocos na parte inferior */
+  overflow: hidden; /* Esconde blocos que saem da tela */
+  z-index: 5; /* Mantém os blocos abaixo da Milta */
+} 
+
+.block {
+  width: 250px; /* Aumenta a largura do bloco */
+  height: 250px; /* Aumenta a altura do bloco */
+  margin: 0 20px; /* Espaçamento horizontal entre os blocos */
+  position: relative; /* Permite o posicionamento absoluto dos blocos */
+}
+
+.block img {
+  width: 100%; /* O bloco ocupa toda a largura */
+  height: auto;
+  display: block;
+}
+
+/* Estilo específico para a Milta no jogo */
+.game-avatar {
+  width: 200px; /* Ajuste o tamanho conforme necessário */
+  height: auto; /* Mantém a proporção da imagem */
+  position: absolute; /* Permite o posicionamento absoluto */
+  bottom: 80px; /* Mantém a Milta acima dos blocos */
+  left: 10px; /* Inicia no canto esquerdo */
+  z-index: 100; /* Garante que a Milta esteja acima dos blocos */
+}
