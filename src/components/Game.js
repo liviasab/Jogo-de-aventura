@@ -77,22 +77,24 @@ const Game = ({ selectedAvatar, difficulty }) => {
   const updateBlocks = useCallback(() => {
     const updatedBlocks = new LinkedList();
     let current = blocks.head;
+    let lastBlockX = -1;
     while (current) {
       const block = current.value;
       block.x -= 5; // Move os blocos para a esquerda
       if (block.x > -80) {
         updatedBlocks.add(block);
+        lastBlockX = block.x;
       }
       current = current.next;
     }
 
     // Adicionar novos blocos aleatórios
-    if (Math.random() < (difficulty === "hard" ? 0.3 : 0.1)) {
+    if (lastBlockX === -1 || lastBlockX < window.innerWidth - 300) {
       updatedBlocks.add(generateBlock());
     }
 
     setBlocks(updatedBlocks);
-  }, [blocks, difficulty, generateBlock]);
+  }, [blocks, generateBlock]);
 
   // Lógica de pulo da Milta
   const handleJump = useCallback(() => {
