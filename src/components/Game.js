@@ -78,9 +78,10 @@ const Game = ({ selectedAvatar, difficulty }) => {
     const updatedBlocks = new LinkedList();
     let current = blocks.head;
     let lastBlockX = -1;
+    const blockSpeed = 15 ;
     while (current) {
       const block = current.value;
-      block.x -= 5; // Move os blocos para a esquerda
+      block.x -= blockSpeed; // Move os blocos para a esquerda
       if (block.x > -80) {
         updatedBlocks.add(block);
         lastBlockX = block.x;
@@ -102,7 +103,7 @@ const Game = ({ selectedAvatar, difficulty }) => {
     setIsJumping(true);
 
     const jumpHeight = 100;
-    const jumpDuration = 500;
+    const jumpDuration = 1000;
 
     const initialY = playerPosition.y;
 
@@ -175,7 +176,7 @@ const Game = ({ selectedAvatar, difficulty }) => {
 
   return (
     <div className="game-container" ref={gameContainerRef}>
-      <div className="avatar game-avatar" style={{ left: playerPosition.x, top: playerPosition.y }}>
+      <div className="avatar game-avatar" style={{ left: playerPosition.x, top: playerPosition.y + 225 , zIndex:100 }}>
         <img src={`/${selectedAvatar}.png`} alt="Milta" />
       </div>
       <div className="status">
@@ -188,7 +189,7 @@ const Game = ({ selectedAvatar, difficulty }) => {
           <div
             key={index}
             className="block"
-            style={{ left: block.x, position: "absolute", bottom: 0 }}
+            style={{ left: block.x, position: "absolute", bottom: 0,   }}
           >
             <img src={blockImages[block.type]} alt={block.type} />
           </div>

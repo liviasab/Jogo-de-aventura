@@ -33,7 +33,8 @@
   width: 250px; /* Aumenta a largura do bloco */
   height: 250px; /* Aumenta a altura do bloco */
   margin: 0 20px; /* Espaçamento horizontal entre os blocos */
-  position: relative; /* Permite o posicionamento absoluto dos blocos */
+  position: relative;
+  z-index: 1; /* Permite o posicionamento absoluto dos blocos */
 }
 
 .block img {
@@ -47,7 +48,10 @@
   width: 200px; /* Ajuste o tamanho conforme necessário */
   height: auto; /* Mantém a proporção da imagem */
   position: absolute; /* Permite o posicionamento absoluto */
-  bottom: 80px; /* Mantém a Milta acima dos blocos */
+  bottom: -20 px; /* Mantém a Milta acima dos blocos */
   left: 10px; /* Inicia no canto esquerdo */
-  z-index: 100; /* Garante que a Milta esteja acima dos blocos */
+  ;/* Gar ante que a Milta esteja acima dos blocos */
 }
+
+
+ 
