@@ -1,3 +1,4 @@
+// Game.js
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./Game.css";
 
@@ -48,12 +49,18 @@ const Game = ({ selectedAvatar, difficulty }) => {
   const [blocks, setBlocks] = useState(new LinkedList());
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 250 }); // Posição fixa da Milta
   const [score, setScore] = useState(0);
-  const [life, setLife] = useState(5);
-  const [energy, setEnergy] = useState(3);
+  const [life, setLife] = useState(difficulty === "hard" ? 1 : difficulty === "medium" ? 3 : 5);
+  const [energy, setEnergy] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [isJumping, setIsJumping] = useState(false);
+  const [isSuperJumping, setIsSuperJumping] = useState(false);
+  const [jumpedBlocks, setJumpedBlocks] = useState(new Set());
+  const [totalJumpedBlocks, setTotalJumpedBlocks] = useState(0);
+  const [totalBombasPuladas, setTotalBombasPuladas] = useState(0);
+  const [totalBombasExplodidas, setTotalBombasExplodidas] = useState(0);
+  const [totalEnergiaCapturada, setTotalEnergiaCapturada] = useState(0);
+  const [playerName, setPlayerName] = useState(""); 
   const gameContainerRef = useRef(null);
-
   const [background, setBackground] = useState("");
 
   useEffect(() => {
@@ -97,7 +104,8 @@ const Game = ({ selectedAvatar, difficulty }) => {
     const updatedBlocks = new LinkedList();
     let current = blocks.head;
     let lastBlockX = -1;
-    const blockSpeed = 15 ;
+    const blockSpeed = difficulty === "hard" ? 20 : difficulty === "medium" ? 15 : 10;
+
     while (current) {
       const block = current.value;
       block.x -= blockSpeed; // Move os blocos para a esquerda
@@ -114,58 +122,80 @@ const Game = ({ selectedAvatar, difficulty }) => {
     }
 
     setBlocks(updatedBlocks);
-  }, [blocks, generateBlock]);
+  }, [blocks, generateBlock, difficulty]);
 
   // Lógica de pulo da Milta
   const handleJump = useCallback(() => {
-    if (isJumping) return; // Impede múltiplos saltos
-    setIsJumping(true);
+    if (isJumping || isSuperJumping) return; // Impede múltiplos saltos
 
-    const jumpHeight = 100;
-    const jumpDuration = 1000;
+    if (energy >= 3) {
+      // Super salto
+      setIsSuperJumping(true);
+      setEnergy(0);
 
-    const initialY = playerPosition.y;
+      const jumpHeight = 300;
+      const jumpDuration = 3000; // Super salto dura mais tempo
 
-    // Salto para cima
-    setPlayerPosition((prev) => ({ ...prev, y: initialY - jumpHeight }));
+      setPlayerPosition((prev) => ({ ...prev, y: playerPosition.y - jumpHeight }));
 
-    setTimeout(() => {
-      setPlayerPosition({ x: playerPosition.x, y: initialY }); // Retorna à posição original
-      setIsJumping(false);
-    }, jumpDuration);
-  }, [playerPosition, isJumping]);
+      setTimeout(() => {
+        setPlayerPosition((prev) => ({ ...prev, y: 250 }));
+        setIsSuperJumping(false);
+      }, jumpDuration);
+    } else {
+      // Salto normal
+      setIsJumping(true);
+
+      const jumpHeight = 100;
+      const jumpDuration = 1000;
+
+      setPlayerPosition((prev) => ({ ...prev, y: playerPosition.y - jumpHeight }));
+
+      setTimeout(() => {
+        setPlayerPosition((prev) => ({ ...prev, y: 250 }));
+        setIsJumping(false);
+      }, jumpDuration);
+    }
+    setTotalJumpedBlocks((prev) => prev + 1);
+  }, [playerPosition, isJumping, isSuperJumping, energy]);
 
   // Verificar colisões
   const checkCollisions = useCallback(() => {
     let current = blocks.head;
+    const newJumpedBlocks = new Set(jumpedBlocks);
+
     while (current) {
       const block = current.value;
 
-      // Verifica se Milta colidiu com um bloco
+      // Verifica se Milta saltou com sucesso sobre um bloco
       if (
-        block.x < playerPosition.x + 60 &&
-        block.x + 60 > playerPosition.x &&
-        playerPosition.y + 60 >= block.y
+        block.x + 60 < playerPosition.x && // Bloco passou pela Milta
+        !newJumpedBlocks.has(block) // Bloco ainda não foi contabilizado
       ) {
+        newJumpedBlocks.add(block);
+
         if (block.type === "explosive") {
-          if (energy > 0) {
-            setEnergy((prev) => prev - 1);
-          } else {
+          if (!isSuperJumping) {
             setLife((prev) => prev - 1);
-            if (life <= 0) setGameOver(true);
+            if (life <= 1) setGameOver(true);
           }
         } else if (block.type === "energy") {
-          setEnergy((prev) => prev + 1);
+          setEnergy((prev) => Math.min(prev + 1, 3));
         } else if (block.type === "bonus") {
           setScore((prev) => prev + 10);
         } else {
           setScore((prev) => prev + 1);
         }
+      } else {
+        // Incrementar contagem de bombas puladas
+        setTotalBombasPuladas((prev) => prev + 1);
       }
 
       current = current.next;
     }
-  }, [blocks, playerPosition, energy, life]);
+
+    setJumpedBlocks(newJumpedBlocks);
+  }, [blocks, playerPosition, isSuperJumping, life, jumpedBlocks]);
 
   useEffect(() => {
     if (gameOver) return;
@@ -190,12 +220,19 @@ const Game = ({ selectedAvatar, difficulty }) => {
   }, [handleJump]);
 
   if (gameOver) {
-    return <div className="game-over">Game Over! Pontuação: {score}</div>;
+    return <div className="game-over">
+     <div>Pontuação: {score}</div>
+        <div>Total de Tijolos Pulados: {totalJumpedBlocks}</div>
+        <div>Total de Bombas Puladas: {totalBombasPuladas}</div>
+        <div>Total de Bombas Explodidas: {totalBombasExplodidas}</div>
+        <div>Total de Energia Capturada: {totalEnergiaCapturada}</div>
+        <div>Nome do Jogador: {playerName}</div> {/* Exibe o nome do jogador */}
+      </div>;
   }
 
   return (
     <div className="game-container" ref={gameContainerRef} style={{ backgroundImage: background }}>
-      <div className="avatar game-avatar" style={{ left: playerPosition.x, top: playerPosition.y + 225 , zIndex:100 }}>
+      <div className="avatar game-avatar" style={{ left: playerPosition.x, top: playerPosition.y + 225, zIndex: 100 }}>
         <img src={`/${selectedAvatar}.png`} alt="Milta" />
       </div>
       <div className="status">
@@ -208,7 +245,7 @@ const Game = ({ selectedAvatar, difficulty }) => {
           <div
             key={index}
             className="block"
-            style={{ left: block.x, position: "absolute", bottom: 0,   }}
+            style={{ left: block.x, position: "absolute", bottom: 0 }}
           >
             <img src={blockImages[block.type]} alt={block.type} />
           </div>
