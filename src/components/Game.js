@@ -46,7 +46,7 @@ class LinkedList {
 
 const Game = ({ selectedAvatar, difficulty }) => {
   const [blocks, setBlocks] = useState(new LinkedList());
-  const [playerPosition, setPlayerPosition] = useState({ x: 10, y: 150 }); // Posição fixa da Milta
+  const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 250 }); // Posição fixa da Milta
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(5);
   const [energy, setEnergy] = useState(3);
