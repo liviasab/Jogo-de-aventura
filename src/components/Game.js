@@ -54,6 +54,25 @@ const Game = ({ selectedAvatar, difficulty }) => {
   const [isJumping, setIsJumping] = useState(false);
   const gameContainerRef = useRef(null);
 
+  const [background, setBackground] = useState("");
+
+  useEffect(() => {
+    // Definir o fundo com base na dificuldade
+    switch (difficulty) {
+      case "easy":
+        setBackground("url('./easy-background.png')");
+        break;
+      case "medium":
+        setBackground("url('./medium-background.png')");
+        break;
+      case "hard":
+        setBackground("url('./hard-background.png')");
+        break;
+      default:
+        setBackground("url('./default-background.png')");
+    }
+  }, [difficulty]);
+
   const blockImages = {
     normal: "./normal-block.png",
     explosive: "./explosive-block.png",
@@ -175,7 +194,7 @@ const Game = ({ selectedAvatar, difficulty }) => {
   }
 
   return (
-    <div className="game-container" ref={gameContainerRef}>
+    <div className="game-container" ref={gameContainerRef} style={{ backgroundImage: background }}>
       <div className="avatar game-avatar" style={{ left: playerPosition.x, top: playerPosition.y + 225 , zIndex:100 }}>
         <img src={`/${selectedAvatar}.png`} alt="Milta" />
       </div>

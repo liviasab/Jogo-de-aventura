@@ -5,7 +5,9 @@
   align-items: center;
   justify-content: flex-end; /* Ajusta para manter a Milta acima dos blocos */
   height: 100vh;
-  background-color: #00B7EF; /* Cor de fundo do jogo */
+  background-color: #00B7EF;
+  background-size: cover; /* Para cobrir todo o contêiner */
+  background-position: center; /* Para centralizar a imagem de fundo */ /* Cor de fundo do jogo */
   position: relative;
 }
 
