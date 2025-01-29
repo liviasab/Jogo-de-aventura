@@ -95,3 +95,41 @@ html {
 .game-avatar.jumping {
   animation: jump 0.5s ease-out;
 }
+/* Game.css */
+
+
+.game-over div {
+  font-size: 40px; /* Tamanho da fonte */
+  margin: 10px 0; /* Espaçamento entre as linhas */
+  text-align: center;
+  
+  
+   /* Centraliza o texto */
+}
+
+/* Adicione uma imagem de fundo ao corpo do jogo */
+body {
+  background-image: url('../assets/placar.png'); /* Caminho para sua imagem de fundo */
+  background-size: 160% 200%; /* Aumenta a imagem em 20% */
+    background-position: center;
+    background-repeat: no-repeat;
+   
+}
+.game-over {
+  text-align: center;
+  color: white;
+  padding: 123px;
+ 
+}
+
+.game-over h1 {
+  color: #333;
+  font-family: "Press Start 2P", sans-serif;
+  font-size: 1.5rem; /* Tamanho do título */
+}
+
+.game-over p {
+  font-size: 1.rem;
+  font-family: "Poppins", sans-serif; /* Tamanho do texto */
+}
+

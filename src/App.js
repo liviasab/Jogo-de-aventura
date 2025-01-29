@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from 'react';
 import WelcomeScreen from './components/WelcomeScreen';
 import AvatarSelection from './components/AvatarSelection';
@@ -11,7 +12,7 @@ function App() {
   const [difficulty, setDifficulty] = useState('');
 
   const handleStartGame = (data) => {
-    setPlayerData(data); // Salvar dados do jogador
+    setPlayerData(data); // Salvar dados do jogador, incluindo avatar e nickname
     setScreen('difficultySelection'); // Mudar para a tela de seleção de dificuldade
   };
 
@@ -25,7 +26,7 @@ function App() {
       {screen === 'welcome' && <WelcomeScreen onPlay={() => setScreen('avatarSelection')} />}
       {screen === 'avatarSelection' && <AvatarSelection onAvatarSelect={handleStartGame} />}
       {screen === 'difficultySelection' && <DifficultySelection onDifficultySelect={handleDifficultySelect} />}
-      {screen === 'game' && <Game selectedAvatar={playerData.avatar} difficulty={difficulty} />}
+      {screen === 'game' && <Game selectedAvatar={playerData.avatar} nickname={playerData.nickname} difficulty={difficulty} />} {/* Passando o nickname */}
     </div>
   );
 }

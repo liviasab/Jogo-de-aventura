@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./Game.css";
 
+
 // Função para criar um nó de lista encadeada
 class Node {
   constructor(value, next = null) {
@@ -45,7 +46,7 @@ class LinkedList {
   }
 }
 
-const Game = ({ selectedAvatar, difficulty }) => {
+const Game = ({ selectedAvatar, difficulty, nickname  }) => {
   const [blocks, setBlocks] = useState(new LinkedList());
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 250 }); // Posição fixa da Milta
   const [score, setScore] = useState(0);
@@ -57,9 +58,8 @@ const Game = ({ selectedAvatar, difficulty }) => {
   const [jumpedBlocks, setJumpedBlocks] = useState(new Set());
   const [totalJumpedBlocks, setTotalJumpedBlocks] = useState(0);
   const [totalBombasPuladas, setTotalBombasPuladas] = useState(0);
-  const [totalBombasExplodidas, setTotalBombasExplodidas] = useState(0);
+  const [totalBombasExplodidas, setTotalBombasExplodidas] = useState(0); // Corrigido para usar useState
   const [totalEnergiaCapturada, setTotalEnergiaCapturada] = useState(0);
-  const [playerName, setPlayerName] = useState(""); 
   const gameContainerRef = useRef(null);
   const [background, setBackground] = useState("");
 
@@ -102,7 +102,7 @@ const Game = ({ selectedAvatar, difficulty }) => {
   // Atualizar os blocos (movê-los para a esquerda)
   const updateBlocks = useCallback(() => {
     const updatedBlocks = new LinkedList();
-    let current = blocks.head;
+    let current = blocks.head; 
     let lastBlockX = -1;
     const blockSpeed = difficulty === "hard" ? 20 : difficulty === "medium" ? 15 : 10;
 
@@ -139,20 +139,20 @@ const Game = ({ selectedAvatar, difficulty }) => {
       setPlayerPosition((prev) => ({ ...prev, y: playerPosition.y - jumpHeight }));
 
       setTimeout(() => {
-        setPlayerPosition((prev) => ({ ...prev, y: 250 }));
+        setPlayerPosition((prev) => ({ ...prev, y: 275 }));
         setIsSuperJumping(false);
       }, jumpDuration);
     } else {
       // Salto normal
       setIsJumping(true);
 
-      const jumpHeight = 100;
-      const jumpDuration = 1000;
+      const jumpHeight = 200;
+      const jumpDuration = 1050;
 
       setPlayerPosition((prev) => ({ ...prev, y: playerPosition.y - jumpHeight }));
 
       setTimeout(() => {
-        setPlayerPosition((prev) => ({ ...prev, y: 250 }));
+        setPlayerPosition((prev) => ({ ...prev, y: 275 }));
         setIsJumping(false);
       }, jumpDuration);
     }
@@ -163,40 +163,50 @@ const Game = ({ selectedAvatar, difficulty }) => {
   const checkCollisions = useCallback(() => {
     let current = blocks.head;
     const newJumpedBlocks = new Set(jumpedBlocks);
-
+  
     while (current) {
       const block = current.value;
-
-      // Verifica se Milta saltou com sucesso sobre um bloco
-      if (
-        block.x + 60 < playerPosition.x && // Bloco passou pela Milta
-        !newJumpedBlocks.has(block) // Bloco ainda não foi contabilizado
-      ) {
-        newJumpedBlocks.add(block);
-
-        if (block.type === "explosive") {
-          if (!isSuperJumping) {
-            setLife((prev) => prev - 1);
-            if (life <= 1) setGameOver(true);
+  
+      // Verifica se o bloco está na mesma faixa horizontal e na faixa de altura da Milta
+      const isInHorizontalRange = block.x < playerPosition.x + 70 && block.x + 70 > playerPosition.x; // Colisão horizontal
+      const isAboveMilta = block.y < playerPosition.y + 70 && block.y + 70 > playerPosition.y; // Ajuste a altura da Milta conforme necessário
+  
+      if (isInHorizontalRange && isAboveMilta) {
+        // Verifica se o bloco já foi contabilizado
+        if (!newJumpedBlocks.has(block)) {
+          newJumpedBlocks.add(block);
+  
+          // Lógica de colisão
+          if (block.type === "explosive") {
+            if (!isSuperJumping) {
+              setLife((prev) => prev - 1);
+              if (life <= 1) setGameOver(true);
+            }
+            setTotalBombasExplodidas((prev) => prev + 1); // Contabiliza a bomba explodida
+          } else if (block.type === "energy") {
+            setEnergy((prev) => Math.min(prev + 1, 3));
+            setTotalEnergiaCapturada((prev) => prev + 1); // Contabiliza a energia capturada
+          } else if (block.type === "bonus") {
+            setScore((prev) => prev + 10);
+          } else {
+            setScore((prev) => prev + 1);
           }
-        } else if (block.type === "energy") {
-          setEnergy((prev) => Math.min(prev + 1, 3));
-        } else if (block.type === "bonus") {
-          setScore((prev) => prev + 10);
-        } else {
-          setScore((prev) => prev + 1);
         }
-      } else {
-        // Incrementar contagem de bombas puladas
+      } else if (block.type === "explosive" && block.x < playerPosition.x) {
+        // Incrementar contagem de bombas puladas se a bomba passou pela Milta
         setTotalBombasPuladas((prev) => prev + 1);
+      } else if (block.type !== "explosive" && block.x < playerPosition.x) {
+        // Incrementar contagem de blocos pulados, exceto explosivos
+        setTotalJumpedBlocks((prev) => prev + 1);
       }
-
+  
       current = current.next;
     }
-
+  
     setJumpedBlocks(newJumpedBlocks);
   }, [blocks, playerPosition, isSuperJumping, life, jumpedBlocks]);
-
+  
+   
   useEffect(() => {
     if (gameOver) return;
 
@@ -220,15 +230,19 @@ const Game = ({ selectedAvatar, difficulty }) => {
   }, [handleJump]);
 
   if (gameOver) {
-    return <div className="game-over">
-     <div>Pontuação: {score}</div>
-        <div>Total de Tijolos Pulados: {totalJumpedBlocks}</div>
-        <div>Total de Bombas Puladas: {totalBombasPuladas}</div>
-        <div>Total de Bombas Explodidas: {totalBombasExplodidas}</div>
-        <div>Total de Energia Capturada: {totalEnergiaCapturada}</div>
-        <div>Nome do Jogador: {playerName}</div> {/* Exibe o nome do jogador */}
-      </div>;
-  }
+    return (
+        <div className="game-over">
+            <h1>Game Over!</h1> {/* Título personalizado */}
+            <p>Score: <strong>{score}</strong></p> {/* Adicionando destaque ao score */}
+            <p>Total Bricks Skipped: <strong>{totalJumpedBlocks}</strong></p>
+            <p>Total Bombs Skipped: <strong>{totalBombasPuladas}</strong></p>
+            <p>Total Bombs Exploded: <strong>{totalBombasExplodidas}</strong></p>
+            <p>Total Energy Captured: <strong>{totalEnergiaCapturada}</strong></p>
+            <p>Nickname: <strong>{nickname}</strong></p> {/* Exibe o nome do jogador */}
+        </div>
+    );
+}
+
 
   return (
     <div className="game-container" ref={gameContainerRef} style={{ backgroundImage: background }}>
@@ -238,7 +252,7 @@ const Game = ({ selectedAvatar, difficulty }) => {
       <div className="status">
         <div className="life">❤️ {life}</div>
         <div className="energy">⚡ {energy}</div>
-        <div className="score">Pontuação: {score}</div>
+        <div className="score">Score: {score}</div>
       </div>
       <div className="blocks-container">
         {blocks.toArray().map((block, index) => (
