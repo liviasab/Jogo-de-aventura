@@ -75,25 +75,19 @@ html {
   position: absolute; /* Permite o posicionamento absoluto */
   bottom: 0; /* A Milta ficará na parte inferior */
   left: 50px; /* Posição inicial da Milta */
-  z-index: 100; /* Garante que a Milta fique acima dos blocos */
+
 }
 
 /* Efeito de Pulo */
 @keyframes jump {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-100px); /* Altura do pulo */
-  }
-  100% {
-    transform: translateY(0);
-  }
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-200px); } /* Ajuste a altura do pulo conforme necessário */
+  100% { transform: translateY(0); }
 }
 
 /* Efeito de Pulo (adicional) */
 .game-avatar.jumping {
-  animation: jump 0.5s ease-out;
+  animation: jump 2s  ease-in-out;
 }
 /* Game.css */
 

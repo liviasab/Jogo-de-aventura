@@ -1,7 +1,5 @@
-// Game.js
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./Game.css";
-
 
 // Função para criar um nó de lista encadeada
 class Node {
@@ -48,7 +46,7 @@ class LinkedList {
 
 const Game = ({ selectedAvatar, difficulty, nickname  }) => {
   const [blocks, setBlocks] = useState(new LinkedList());
-  const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 250 }); // Posição fixa da Milta
+  const [playerPosition, setPlayerPosition] = useState({ x: 100, y: 200 }); // Ajuste a posição inicial da Milta
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(difficulty === "hard" ? 1 : difficulty === "medium" ? 3 : 5);
   const [energy, setEnergy] = useState(0);
@@ -95,7 +93,7 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
     return {
       type: randomType,
       x: window.innerWidth - 80,
-      y: 300 + Math.floor(Math.random() * 50), // Posição Y aleatória
+      y: 150 + Math.floor(Math.random() * 50), // Ajuste a posição Y dos blocos
     };
   }, []);
 
@@ -127,32 +125,32 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
   // Lógica de pulo da Milta
   const handleJump = useCallback(() => {
     if (isJumping || isSuperJumping) return; // Impede múltiplos saltos
-
+  
     if (energy >= 3) {
       // Super salto
       setIsSuperJumping(true);
       setEnergy(0);
-
-      const jumpHeight = 300;
-      const jumpDuration = 3000; // Super salto dura mais tempo
-
+  
+      const jumpHeight = 400; // Aumenta a altura do super salto
+      const jumpDuration = 3500; // Aumenta a duração do super salto
+  
       setPlayerPosition((prev) => ({ ...prev, y: playerPosition.y - jumpHeight }));
-
+  
       setTimeout(() => {
-        setPlayerPosition((prev) => ({ ...prev, y: 275 }));
+        setPlayerPosition((prev) => ({ ...prev, y: 200 })); // Ajuste a posição de retorno da Milta
         setIsSuperJumping(false);
       }, jumpDuration);
     } else {
       // Salto normal
       setIsJumping(true);
-
-      const jumpHeight = 200;
-      const jumpDuration = 1050;
-
+  
+      const jumpHeight = 300; // Aumenta a altura do salto normal
+      const jumpDuration = 1250; // Aumenta a duração do salto normal
+  
       setPlayerPosition((prev) => ({ ...prev, y: playerPosition.y - jumpHeight }));
-
+  
       setTimeout(() => {
-        setPlayerPosition((prev) => ({ ...prev, y: 275 }));
+        setPlayerPosition((prev) => ({ ...prev, y: 200 })); // Ajuste a posição de retorno da Milta
         setIsJumping(false);
       }, jumpDuration);
     }
@@ -163,19 +161,19 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
   const checkCollisions = useCallback(() => {
     let current = blocks.head;
     const newJumpedBlocks = new Set(jumpedBlocks);
-  
+
     while (current) {
       const block = current.value;
-  
+
       // Verifica se o bloco está na mesma faixa horizontal e na faixa de altura da Milta
       const isInHorizontalRange = block.x < playerPosition.x + 70 && block.x + 70 > playerPosition.x; // Colisão horizontal
       const isAboveMilta = block.y < playerPosition.y + 70 && block.y + 70 > playerPosition.y; // Ajuste a altura da Milta conforme necessário
-  
+
       if (isInHorizontalRange && isAboveMilta) {
         // Verifica se o bloco já foi contabilizado
         if (!newJumpedBlocks.has(block)) {
           newJumpedBlocks.add(block);
-  
+
           // Lógica de colisão
           if (block.type === "explosive") {
             if (!isSuperJumping) {
@@ -199,14 +197,13 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
         // Incrementar contagem de blocos pulados, exceto explosivos
         setTotalJumpedBlocks((prev) => prev + 1);
       }
-  
+
       current = current.next;
     }
-  
+
     setJumpedBlocks(newJumpedBlocks);
   }, [blocks, playerPosition, isSuperJumping, life, jumpedBlocks]);
-  
-   
+
   useEffect(() => {
     if (gameOver) return;
 
@@ -246,7 +243,7 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
 
   return (
     <div className="game-container" ref={gameContainerRef} style={{ backgroundImage: background }}>
-      <div className="avatar game-avatar" style={{ left: playerPosition.x, top: playerPosition.y + 225, zIndex: 100 }}>
+      <div className={`avatar game-avatar ${isJumping || isSuperJumping ? 'jumping' : ''}`}>
         <img src={`/${selectedAvatar}.png`} alt="Milta" />
       </div>
       <div className="status">
