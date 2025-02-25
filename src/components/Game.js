@@ -270,3 +270,5 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
 };
 
 export default Game;
+
+
