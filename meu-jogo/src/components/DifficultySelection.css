@@ -48,8 +48,8 @@ button {
   cursor: pointer;
   border: none;
   border-radius: 5px;
-  background-color: white; /* Cor do botão */
-  color: #00b7ef; /* Cor do texto do botão */
+  background-color: #7F3E00; /* Cor do botão */
+  color: #C08E0E; /* Cor do texto do botão */
   transition: background-color 0.3s;
 }
 

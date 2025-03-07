@@ -46,7 +46,28 @@ class LinkedList {
   }
 }
 
-const Game = ({ selectedAvatar, difficulty, nickname  }) => {
+/*
+score: {type: Number},
+total_bricks: {type: Number},
+bombs_skipped: {type: Number},
+bombs_exploded: {type: Number},
+energy_captured: {type: Number},
+nickname: {type: String}
+*/
+
+export const salvarScore = async (score, totalJumpedBlocks, totalBombasPuladas, totalBombasExplodidas, totalEnergiaCapturada, nickname) => {
+    const response = await fetch('http://meu-back:3001', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({score, totalbricks: totalJumpedBlocks, bombs_skipped: totalBombasPuladas, bombs_exploded: totalBombasExplodidas, energy_captured: totalEnergiaCapturada, nickname}),
+    });
+
+    return response;
+}
+
+const Game = ({ selectedAvatar, difficulty, nickname,homeScreen  }) => {
   const [blocks, setBlocks] = useState(new LinkedList());
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 250 }); // Posição fixa da Milta
   const [score, setScore] = useState(0);
@@ -205,6 +226,23 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
   
     setJumpedBlocks(newJumpedBlocks);
   }, [blocks, playerPosition, isSuperJumping, life, jumpedBlocks]);
+
+
+  const resetGame = () => {
+    setBlocks(new LinkedList());
+    setPlayerPosition({ x: 0, y: 250 });
+    setScore(0);
+    setLife(difficulty === "hard" ? 1 : difficulty === "medium" ? 3 : 5);
+    setEnergy(0);
+    setGameOver(false);
+    setIsJumping(false);
+    setIsSuperJumping(false);
+    setJumpedBlocks(new Set());
+    setTotalJumpedBlocks(0);
+    setTotalBombasPuladas(0);
+    setTotalBombasExplodidas(0);
+    setTotalEnergiaCapturada(0);
+  };
   
    
   useEffect(() => {
@@ -229,17 +267,27 @@ const Game = ({ selectedAvatar, difficulty, nickname  }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleJump]);
 
+  useEffect(() => {
+        if (gameOver) {
+            salvarScore(score, totalJumpedBlocks, totalBombasPuladas, totalBombasExplodidas, totalEnergiaCapturada, nickname);
+        }
+    });
+
   if (gameOver) {
     return (
-        <div className="game-over">
-            <h1>Game Over!</h1> {/* Título personalizado */}
-            <p>Score: <strong>{score}</strong></p> {/* Adicionando destaque ao score */}
-            <p>Total Bricks Skipped: <strong>{totalJumpedBlocks}</strong></p>
-            <p>Total Bombs Skipped: <strong>{totalBombasPuladas}</strong></p>
-            <p>Total Bombs Exploded: <strong>{totalBombasExplodidas}</strong></p>
-            <p>Total Energy Captured: <strong>{totalEnergiaCapturada}</strong></p>
-            <p>Nickname: <strong>{nickname}</strong></p> {/* Exibe o nome do jogador */}
+      <div className="game-over" >
+        <div>
+            <span style={{ fontSize: "3vw" }}>Game Over!</span>
+            <span>Score: <strong>{score}</strong></span> {/* Adicionando destaque ao score */}
+            <span>Total Bricks Skipped: <strong>{totalJumpedBlocks}</strong></span>
+            <span>Total Bombs Skipped: <strong>{totalBombasPuladas}</strong></span>
+            <span>Total Bombs Exploded: <strong>{totalBombasExplodidas}</strong></span>
+            <span>Total Energy Captured: <strong>{totalEnergiaCapturada}</strong></span>
+            <span>Nickname: <strong>{nickname}</strong></span> {/* Exibe o nome do jogador */}
+            <button onClick={() => resetGame()}>Recomeçar</button>
+            <button onClick={() => homeScreen()}>Tela Inicial</button>
         </div>
+      </div>
     );
 }
 

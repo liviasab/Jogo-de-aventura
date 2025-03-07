@@ -1,0 +1,30 @@
+
+services:
+  frontend:
+    build: ./meu-jogo
+    ports:
+      - "3000:80"
+    container_name: meu-front
+    networks: 
+      - redinha 
+  backend:
+    build: ./meu-server
+    ports:
+      - "3001:3001"
+    container_name: meu-back
+    networks: 
+      - redinha 
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    container_name: meu-banco
+    networks: 
+      - redinha 
+
+networks:
+  redinha: 
+    driver: bridge 
+
+
+    

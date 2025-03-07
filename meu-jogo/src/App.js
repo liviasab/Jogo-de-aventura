@@ -26,7 +26,7 @@ function App() {
       {screen === 'welcome' && <WelcomeScreen onPlay={() => setScreen('avatarSelection')} />}
       {screen === 'avatarSelection' && <AvatarSelection onAvatarSelect={handleStartGame} />}
       {screen === 'difficultySelection' && <DifficultySelection onDifficultySelect={handleDifficultySelect} />}
-      {screen === 'game' && <Game selectedAvatar={playerData.avatar} nickname={playerData.nickname} difficulty={difficulty} />} {/* Passando o nickname */}
+      {screen === 'game' && <Game selectedAvatar={playerData.avatar} nickname={playerData.nickname} difficulty={difficulty} homeScreen={() => setScreen('welcome')} />} {/* Passando o nickname */}
     </div>
   );
 }
